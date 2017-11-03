@@ -1,0 +1,183 @@
+/*
+SQLyog v10.2 
+MySQL - 5.0.24-community-nt : Database - rbac
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`rbac` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `rbac`;
+
+/*Table structure for table `authority` */
+
+DROP TABLE IF EXISTS `authority`;
+
+CREATE TABLE `authority` (
+  `id` int(11) NOT NULL auto_increment,
+  `authoritydesc` varchar(50) default NULL COMMENT '权限描述',
+  `methodpath` varchar(300) default NULL COMMENT '需要认证权限的方法路径',
+  `parentid` int(11) default NULL COMMENT '父id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `authority` */
+
+insert  into `authority`(`id`,`authoritydesc`,`methodpath`,`parentid`) values (1,'用户管理查询权限','com.xx.ssm.web.controller.UserInfoController.userList',0);
+
+/*Table structure for table `flowdefine` */
+
+DROP TABLE IF EXISTS `flowdefine`;
+
+CREATE TABLE `flowdefine` (
+  `id` int(11) NOT NULL auto_increment,
+  `flowname` varchar(20) default NULL COMMENT '流程名称',
+  `jsondata` varchar(2000) default NULL COMMENT '流程图json数据',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `flowdefine` */
+
+insert  into `flowdefine`(`id`,`flowname`,`jsondata`) values (1,'请假工作流','{\"title\":\"手机上网套餐办理\",\"nodes\":{\"demo_node_48\":{\"name\":\"node_48\",\"left\":502,\"top\":45,\"type\":\"start round\",\"width\":24,\"height\":24,\"alt\":true},\"demo_node_49\":{\"name\":\"node_49\",\"left\":504,\"top\":116,\"type\":\"task round\",\"width\":24,\"height\":24,\"alt\":true},\"demo_node_50\":{\"name\":\"node_50\",\"left\":490,\"top\":195,\"type\":\"task round\",\"width\":24,\"height\":24,\"alt\":true},\"demo_node_51\":{\"name\":\"node_51\",\"left\":484,\"top\":272,\"type\":\"task round\",\"width\":24,\"height\":24,\"alt\":true},\"demo_node_52\":{\"name\":\"node_52\",\"left\":490,\"top\":374,\"type\":\"end round\",\"width\":24,\"height\":24,\"alt\":true}},\"lines\":{\"demo_line_53\":{\"type\":\"sl\",\"from\":\"demo_node_48\",\"to\":\"demo_node_49\",\"name\":\"\",\"alt\":true},\"demo_line_54\":{\"type\":\"sl\",\"from\":\"demo_node_49\",\"to\":\"demo_node_50\",\"name\":\"\",\"alt\":true},\"demo_line_55\":{\"type\":\"sl\",\"from\":\"demo_node_50\",\"to\":\"demo_node_51\",\"name\":\"\",\"alt\":true},\"demo_line_56\":{\"type\":\"sl\",\"from\":\"demo_node_51\",\"to\":\"demo_node_52\",\"name\":\"\",\"alt\":true}},\"areas\":{},\"initNum\":57}');
+
+/*Table structure for table `flowinstance` */
+
+DROP TABLE IF EXISTS `flowinstance`;
+
+CREATE TABLE `flowinstance` (
+  `id` int(11) NOT NULL auto_increment,
+  `defid` int(11) default NULL COMMENT '流程id',
+  `currentnodeid` int(11) default NULL COMMENT '正在进行的流程节点id',
+  `serviceurl` varchar(100) default NULL COMMENT '该流程的申请单url',
+  `status` varchar(10) default NULL COMMENT '节点状态: 完成,进行中',
+  `nextnodeid` int(11) default NULL COMMENT '下一个节点id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `flowinstance` */
+
+insert  into `flowinstance`(`id`,`defid`,`currentnodeid`,`serviceurl`,`status`,`nextnodeid`) values (1,1,1,'applay',NULL,2);
+
+/*Table structure for table `flownode` */
+
+DROP TABLE IF EXISTS `flownode`;
+
+CREATE TABLE `flownode` (
+  `id` int(11) NOT NULL auto_increment,
+  `nodename` varchar(50) default NULL COMMENT '流程节点名称',
+  `nodetype` varchar(10) default NULL COMMENT '节点类型',
+  `nextnodeid` varchar(10) default NULL COMMENT '下一节点id',
+  `prevnodeid` int(11) default NULL COMMENT '上一节点id',
+  `approverUserId` int(11) default NULL COMMENT '审批者用户id',
+  `approverRoleId` int(11) default NULL COMMENT '审批者角色id',
+  `defid` int(11) default NULL COMMENT '流程id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `flownode` */
+
+insert  into `flownode`(`id`,`nodename`,`nodetype`,`nextnodeid`,`prevnodeid`,`approverUserId`,`approverRoleId`,`defid`) values (1,'开始','','2',NULL,0,0,1),(2,'部门经理审批',NULL,'3',1,1,NULL,1),(3,'人事专员审批',NULL,'4',2,2,2,1),(4,'人事经理审批',NULL,'5',3,3,3,1),(5,'结束',NULL,NULL,4,NULL,NULL,1);
+
+/*Table structure for table `menu` */
+
+DROP TABLE IF EXISTS `menu`;
+
+CREATE TABLE `menu` (
+  `id` int(11) NOT NULL auto_increment,
+  `menuname` varchar(20) default NULL COMMENT '菜单名',
+  `menuurl` varchar(300) default NULL COMMENT '菜单url',
+  `parentid` int(11) default NULL COMMENT '父id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `menu` */
+
+insert  into `menu`(`id`,`menuname`,`menuurl`,`parentid`) values (1,'系统管理',NULL,0),(2,'用户管理','userList',1),(3,'角色管理','roleList',1),(4,'权限管理',NULL,0),(5,'给用户分配角色',NULL,4),(6,'给角色分配权限',NULL,4),(7,'工作流',NULL,0),(8,'流程管理',NULL,7),(9,'我的工作台',NULL,0),(10,'请假申请','leavesheet',9),(11,'我的代办',NULL,9),(12,'权限维护',NULL,4);
+
+/*Table structure for table `role` */
+
+DROP TABLE IF EXISTS `role`;
+
+CREATE TABLE `role` (
+  `id` int(11) NOT NULL auto_increment,
+  `rolename` varchar(20) default NULL COMMENT '角色名',
+  `parentid` int(11) default NULL COMMENT '父id',
+  `roledesc` varchar(100) default NULL COMMENT '角色描述',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `role` */
+
+insert  into `role`(`id`,`rolename`,`parentid`,`roledesc`) values (1,'管理员',0,'维护系统的全部权限'),(2,'开发管理',0,'公司内部系统管理'),(3,'测试管理',0,'测试身份使用系统');
+
+/*Table structure for table `role_authority_r` */
+
+DROP TABLE IF EXISTS `role_authority_r`;
+
+CREATE TABLE `role_authority_r` (
+  `id` int(11) NOT NULL auto_increment,
+  `roleid` int(11) default NULL COMMENT '角色id',
+  `authorityid` int(11) default NULL COMMENT '权限id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `role_authority_r` */
+
+insert  into `role_authority_r`(`id`,`roleid`,`authorityid`) values (1,1,1);
+
+/*Table structure for table `user_menu_r` */
+
+DROP TABLE IF EXISTS `user_menu_r`;
+
+CREATE TABLE `user_menu_r` (
+  `id` int(11) NOT NULL auto_increment,
+  `userid` int(11) default NULL COMMENT '用户id',
+  `menuid` int(11) default NULL COMMENT '菜单id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `user_menu_r` */
+
+insert  into `user_menu_r`(`id`,`userid`,`menuid`) values (1,1,1),(2,1,2);
+
+/*Table structure for table `user_role_r` */
+
+DROP TABLE IF EXISTS `user_role_r`;
+
+CREATE TABLE `user_role_r` (
+  `id` int(11) NOT NULL auto_increment,
+  `userid` int(11) default NULL COMMENT '用户id',
+  `roleid` int(11) default NULL COMMENT '角色id',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `user_role_r` */
+
+insert  into `user_role_r`(`id`,`userid`,`roleid`) values (1,1,1),(2,1,2),(3,2,1),(4,1,3),(5,3,1);
+
+/*Table structure for table `userinfo` */
+
+DROP TABLE IF EXISTS `userinfo`;
+
+CREATE TABLE `userinfo` (
+  `id` int(11) NOT NULL auto_increment,
+  `username` varchar(20) default NULL COMMENT '用户名',
+  `passwd` varchar(20) default NULL COMMENT '密码',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `userinfo` */
+
+insert  into `userinfo`(`id`,`username`,`passwd`) values (1,'admin','123'),(2,'develop','123'),(3,'test','123');
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

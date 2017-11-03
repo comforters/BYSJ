@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 基于接口的增删改查， 开启了二级缓存 -->
+<mapper namespace="com.xx.ssm.dao.IMenuTreeDao">
+	<!-- 配置java对象的属性与列的映射  -->
+	<resultMap type="treeNode" id="menuResultList">
+		<id column="id" property="id" />
+		<result column="nodeName" property="nodeName" />
+		<result column="note1" property="note1" />
+		<result column="note2" property="note2" />
+		<result column="note3" property="note3" />
+	</resultMap>
+	
+	<select id="queryTreeNodes" parameterType="int" resultMap="menuResultList">
+		select id,menuname as nodename, menuurl as note1 from menu where parentid=#{topId}
+	</select>
+	 
+</mapper>

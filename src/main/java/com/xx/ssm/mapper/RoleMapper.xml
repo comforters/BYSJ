@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 基于接口的增删改查， 开启了二级缓存 -->
+<mapper namespace="com.xx.ssm.dao.IRoleDao">
+	<!-- 配置java对象的属性与列的映射 -->
+	<resultMap type="role" id="resultList">
+		<id column="rid" property="id" />
+		<result column="rolename" property="roleName" />
+		<result column="parentid" property="parentId" />
+		<collection property="authorities" ofType="authority">
+			<result column="aid" property="id" />
+			<result column="authorityDesc" property="authorityDesc" />
+			<result column="methodPath" property="methodPath" />
+		</collection>
+	</resultMap>
+	
+	<select id="listById" resultMap="resultList">
+		 SELECT r.id as rid,r.rolename, a.id as aid, a.authoritydesc, a.methodpath FROM role r INNER JOIN authority a 
+		 INNER JOIN role_authority_r rar ON r.id=rar.roleid AND a.id=rar.authorityid WHERE r.id=#{roleId}
+	</select>
+
+</mapper>

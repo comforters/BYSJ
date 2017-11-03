@@ -1,0 +1,55 @@
+package com.xx.ssm.web.controller;
+/*
+ * 1  com.xx.ssm.web.controller.UserInfoController.index
+ */
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.RequiredTypes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xx.ssm.anno.PermissionControl;
+import com.xx.ssm.entity.PageBean;
+import com.xx.ssm.entity.UserInfo;
+import com.xx.ssm.service.IUserService;
+@Controller
+public class UserInfoController {
+	
+	@Autowired
+	private IUserService userService;
+	@RequestMapping("login")
+	public String login(UserInfo userInfo,WebRequest request){
+		System.out.println(userInfo);
+		userInfo =userService.login(userInfo);
+		System.out.println(userInfo);
+		request.setAttribute("userInfo", userInfo, WebRequest.SCOPE_SESSION);
+		return "main";
+	}
+	@RequestMapping("userList")
+	@PermissionControl
+	public String userList(Model model,PageBean pageBean){
+		PageHelper.startPage(pageBean.getPageNum(),pageBean.getPageSize());
+		List<UserInfo> list= userService.list();
+		for (UserInfo userInfo : list) {
+			System.out.println(userInfo);
+		}
+		PageInfo pageInfo = new PageInfo(list);
+		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("list", list);
+		return "userList";
+	}
+	@RequestMapping("leavesheet")
+	@PermissionControl
+	public String leavesheet(){
+		return "leavesheet";
+	}
+	
+}

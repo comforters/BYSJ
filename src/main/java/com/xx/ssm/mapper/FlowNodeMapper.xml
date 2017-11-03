@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 基于接口的增删改查， 开启了二级缓存 -->
+<mapper namespace="com.xx.ssm.dao.IFlowNodeDao">
+	<!-- 配置java对象的属性与列的映射 -->
+	<resultMap type="FlowNode" id="resultList">
+		<id column="id" property="id" />
+		<result column="nodename" property="nodeName" />
+		<result column="nodetype" property="nodeType" />
+		<result column="nextnodeid" property="nextNodeId" />
+		<result column="prevnodeid" property="prevNodeId" />
+		<result column="approveruserid" property="approverUserId" />
+		<result column="approverroleid" property="approverRoleId" />
+		<result column="defid" property="defid" />
+	</resultMap>
+
+	<insert id="addNode" >
+		insert into flownode(id,nodename,nodetype,nextnodeid,prevnodeid,approveruserid,approverroleid,defid)values(#{id},#{nodeName},#{nodeType},#{nextNodeId},#{prevNodeId},#{approverUserId},#{approverRoleId},#{defid});
+	</insert>
+	<select id="selectNode" resultMap="resultList">
+		select * from flownode where id=#{arg0} and defid=#{arg1}
+	</select>
+	<select id="selectNodeById" resultMap="resultList">
+		select * from flownode where approverUserid=#{arg0} and defid=#{arg1}
+	</select>
+	
+</mapper>

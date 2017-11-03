@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 基于接口的增删改查， 开启了二级缓存 -->
+<mapper namespace="com.xx.ssm.dao.IUserInfoDao">
+	<!-- 配置java对象的属性与列的映射 -->
+	<resultMap type="userInfo" id="resultList">
+		<id column="uid" property="id" />
+		<result column="username" property="userName" />
+		<result column="passwd" property="passWd" />
+		<collection property="roles" ofType="role">
+			<result column="rid" property="id" />
+			<result column="rolename" property="roleName" />
+			<result column="parentid" property="parentId" />
+		</collection>
+	</resultMap>
+
+	<select id="login" resultMap="resultList">
+		select u.id as uid,u.username,u.passwd,r.id as rid,  r.rolename, r.parentid from userinfo u
+		inner join role r inner join user_role_r urr on 
+		u.id = urr.userid and r.id= urr.roleid where u.username=#{userName} and u.passwd=#{passWd}
+	</select>
+	<select id="list" resultMap="resultList">
+		select u.id as uid,u.username,u.passwd,r.id as rid,  r.rolename, r.parentid from userinfo u
+		inner join role r inner join user_role_r urr on 
+		u.id = urr.userid and r.id= urr.roleid
+	</select>
+
+</mapper>

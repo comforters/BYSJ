@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 基于接口的增删改查， 开启了二级缓存 -->
+<mapper namespace="com.xx.ssm.dao.IFlowDefineDao">
+	<!-- 配置java对象的属性与列的映射 -->
+	<resultMap type="FlowDefine" id="resultList">
+		<id column="id" property="id" />
+		<result column="flowname" property="flowName" />
+		<result column="jsondata" property="jsonData" />
+	</resultMap>
+
+	<insert id="addFlow" >
+		insert into flowdefine(id,flowname,jsondata)values(#{id},#{flowName},#{jsonData});
+	</insert>
+	<select id="selectAllFlow" resultMap="resultList">
+		select * from flowdefine
+	</select>
+	<select id="selectFlowById" resultMap="resultList">
+		select * from flowdefine where id=#{id}
+	</select>
+</mapper>

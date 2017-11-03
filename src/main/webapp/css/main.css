@@ -1,0 +1,36 @@
+#northId {
+	overflow: hidden;
+	height: 30px;
+	background: url(../images/layout-browser-hd-bg.gif) #7f99be repeat-x
+		center 50%;
+	line-height: 20px;
+	color: #fff;
+	font-family: Verdana, Î¢ÈíÑÅºÚ, ºÚÌå
+}
+
+#span1 {
+	float: right;
+	padding-right: 20px;
+}
+
+#span2 {
+	padding-left: 10px;
+	font-size: 16px;
+}
+
+#editpass {
+	color: #fff;
+}
+
+#loginOut {
+	color: #fff;
+}
+
+.footer {
+	text-align: center;
+	color: #15428B;
+	margin: 0px;
+	padding: 0px;
+	line-height: 23px;
+	font-weight: bold;
+}
